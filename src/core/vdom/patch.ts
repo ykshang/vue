@@ -712,6 +712,7 @@ export function createPatchFunction(backend) {
     index,
     removeOnly?: any
   ) {
+    // 新老节点完全相同
     if (oldVnode === vnode) {
       return
     }
@@ -953,25 +954,29 @@ export function createPatchFunction(backend) {
     // 定义插入队列，用于收集需要插入的节点
     const insertedVnodeQueue: any[] = []
 
-    // 老节点不存在，说明是节点初始化时挂载
     if (isUndef(oldVnode)) {
+      // 老节点不存在，说明是节点初始化时挂载
       // empty mount (likely as component), create new root element
       isInitialPatch = true
       createElm(vnode, insertedVnodeQueue)
     } else {
-      const isRealElement = isDef(oldVnode.nodeType)
+      // 是否为真实的 DOM 元素
+      const isRealElement = isDef(oldVnode.nodeType) 
       if (!isRealElement && sameVnode(oldVnode, vnode)) {
         // patch existing root node
+        // 如果是虚拟节点，并且新老元素相同，进行内容的详细比较
         patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly)
       } else {
         if (isRealElement) {
           // mounting to a real element
           // check if this is server-rendered content and if we can perform
           // a successful hydration.
+          // 如果是真实的DOM 元素，判断是否为服务端渲染 SSR
           if (oldVnode.nodeType === 1 && oldVnode.hasAttribute(SSR_ATTR)) {
             oldVnode.removeAttribute(SSR_ATTR)
             hydrating = true
           }
+          // 服务端渲染
           if (isTrue(hydrating)) {
             if (hydrate(oldVnode, vnode, insertedVnodeQueue)) {
               invokeInsertHook(vnode, insertedVnodeQueue, true)

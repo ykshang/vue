@@ -3,37 +3,38 @@ import type { ComponentOptions } from 'types/options'
 import type { VNodeComponentOptions, VNodeData } from 'types/vnode'
 
 /**
+ * Virtual DOM节点类，表示Vue中的虚拟节点
  * @internal
  */
 export default class VNode {
-  tag?: string
-  data: VNodeData | undefined
-  children?: Array<VNode> | null
-  text?: string
-  elm: Node | undefined
-  ns?: string
-  context?: Component // rendered in this component's scope
-  key: string | number | undefined
-  componentOptions?: VNodeComponentOptions
-  componentInstance?: Component // component instance
-  parent: VNode | undefined | null // component placeholder node
+  tag?: string // 节点标签名
+  data: VNodeData | undefined // 节点数据，包含属性、事件等
+  children?: Array<VNode> | null // 子节点数组
+  text?: string // 文本内容
+  elm: Node | undefined // 对应的真实DOM节点
+  ns?: string // 命名空间
+  context?: Component // 所属的Vue组件实例
+  key: string | number | undefined // 节点的key，用于diff算法优化
+  componentOptions?: VNodeComponentOptions // 组件选项
+  componentInstance?: Component // 组件实例
+  parent: VNode | undefined | null // 父节点
 
-  // strictly internal
-  raw: boolean // contains raw HTML? (server only)
-  isStatic: boolean // hoisted static node
-  isRootInsert: boolean // necessary for enter transition check
-  isComment: boolean // empty comment placeholder?
-  isCloned: boolean // is a cloned node?
-  isOnce: boolean // is a v-once node?
-  asyncFactory?: Function // async component factory function
-  asyncMeta: Object | void
-  isAsyncPlaceholder: boolean
-  ssrContext?: Object | void
-  fnContext: Component | void // real context vm for functional nodes
-  fnOptions?: ComponentOptions | null // for SSR caching
-  devtoolsMeta?: Object | null // used to store functional render context for devtools
-  fnScopeId?: string | null // functional scope id support
-  isComponentRootElement?: boolean | null // for SSR directives
+  // 以下为内部属性
+  raw: boolean // 是否包含原始HTML(仅服务端渲染使用)
+  isStatic: boolean // 是否是静态节点
+  isRootInsert: boolean // 是否是根插入节点，用于过渡动画检查
+  isComment: boolean // 是否是注释节点
+  isCloned: boolean // 是否是克隆节点
+  isOnce: boolean // 是否是v-once节点
+  asyncFactory?: Function // 异步组件工厂函数
+  asyncMeta: Object | void // 异步组件元数据
+  isAsyncPlaceholder: boolean // 是否是异步组件占位符
+  ssrContext?: Object | void // 服务端渲染上下文
+  fnContext: Component | void // 函数式组件的上下文
+  fnOptions?: ComponentOptions | null // 用于SSR缓存
+  fnScopeId?: string | null // 函数式组件的作用域ID
+  devtoolsMeta?: Object | null // 用于devtools调试
+  isComponentRootElement?: boolean | null // 是否是组件根元素(用于SSR指令)
 
   constructor(
     tag?: string,
@@ -70,13 +71,21 @@ export default class VNode {
     this.isAsyncPlaceholder = false
   }
 
-  // DEPRECATED: alias for componentInstance for backwards compat.
+  /**
+   * @deprecated 已废弃，请使用componentInstance替代
+   * 获取组件实例(向后兼容)
+   */
   /* istanbul ignore next */
   get child(): Component | void {
     return this.componentInstance
   }
 }
 
+/**
+ * 创建空注释节点
+ * @param text 注释文本内容
+ * @returns 空注释VNode
+ */
 export const createEmptyVNode = (text: string = '') => {
   const node = new VNode()
   node.text = text
@@ -84,14 +93,22 @@ export const createEmptyVNode = (text: string = '') => {
   return node
 }
 
+/**
+ * 创建文本节点
+ * @param val 文本内容
+ * @returns 文本VNode
+ */
 export function createTextVNode(val: string | number) {
   return new VNode(undefined, undefined, undefined, String(val))
 }
 
-// optimized shallow clone
-// used for static nodes and slot nodes because they may be reused across
-// multiple renders, cloning them avoids errors when DOM manipulations rely
-// on their elm reference.
+/**
+ * 克隆VNode(浅拷贝)
+ * 用于静态节点和插槽节点，因为它们可能在多次渲染中被重用
+ * 克隆它们可以避免DOM操作依赖elm引用时出错
+ * @param vnode 要克隆的VNode
+ * @returns 克隆后的新VNode
+ */
 export function cloneVNode(vnode: VNode): VNode {
   const cloned = new VNode(
     vnode.tag,

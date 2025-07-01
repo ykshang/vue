@@ -75,7 +75,6 @@ export default class VNode {
    * @deprecated 已废弃，请使用componentInstance替代
    * 获取组件实例(向后兼容)
    */
-  /* istanbul ignore next */
   get child(): Component | void {
     return this.componentInstance
   }

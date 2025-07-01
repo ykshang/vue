@@ -51,6 +51,7 @@ function sameVnode(a, b) {
     ((a.tag === b.tag &&
       a.isComment === b.isComment &&
       isDef(a.data) === isDef(b.data) &&
+      // 二者是否
       sameInputType(a, b)) ||
       (isTrue(a.isAsyncPlaceholder) && isUndef(b.asyncFactory.error)))
   )

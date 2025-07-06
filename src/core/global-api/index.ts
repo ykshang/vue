@@ -16,23 +16,15 @@ import { initAssetRegisters } from './assets'
 // 导入响应式系统的 set 和 del 方法
 import { set, del } from '../observer/index'
 // 导入 nextTick 方法
-import { nextTick } from '../util/next-tick'
-/**
- * 导入资源类型常量 (component/directive/filter)
- */
+// import { nextTick } from '../util/next-tick'
+// 导入资源类型常量 (component/directive/filter)
 import { ASSET_TYPES } from 'shared/constants'
-/**
- * 导入内置组件 (如 keep-alive, transition 等)
- */
+// 导入内置组件 (如 keep-alive, transition 等)
 import builtInComponents from '../components/index'
-/**
- * 导入响应式观察方法
- */
+// 导入响应式观察方法
 import { observe } from 'core/observer/index'
 
-/**
- * 导入工具方法
- */
+// 导入工具方法
 import {
   warn,       // 警告方法
   extend,     // 对象扩展方法
@@ -40,9 +32,8 @@ import {
   mergeOptions, // 选项合并方法
   defineReactive // 定义响应式属性方法
 } from '../util/index'
-/**
- * 导入全局 API 类型定义
- */
+
+// 导入全局 API 类型定义
 import type { GlobalAPI } from 'types/global-api'
 
 /**

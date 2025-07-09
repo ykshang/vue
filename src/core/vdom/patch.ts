@@ -994,14 +994,16 @@ export function createPatchFunction(backend) {
           }
           // either not server-rendered, or hydration failed.
           // create an empty node and replace it
+          // 不是服务端渲染，或者服务端渲染失败，创建一个空节点，替换旧节点
           oldVnode = emptyNodeAt(oldVnode)
         }
-
         // replacing existing element
+        // 替换已存在的元素
         const oldElm = oldVnode.elm
         const parentElm = nodeOps.parentNode(oldElm)
 
         // create new node
+        // 创建一个新节点
         createElm(
           vnode,
           insertedVnodeQueue,
@@ -1012,6 +1014,7 @@ export function createPatchFunction(backend) {
           nodeOps.nextSibling(oldElm)
         )
 
+        // 递归更新父占位节点
         // update parent placeholder node element, recursively
         if (isDef(vnode.parent)) {
           let ancestor = vnode.parent
@@ -1045,7 +1048,7 @@ export function createPatchFunction(backend) {
           }
         }
 
-        // destroy old node
+        // 销毁旧节点
         if (isDef(parentElm)) {
           removeVnodes([oldVnode], 0, 0)
         } else if (isDef(oldVnode.tag)) {
